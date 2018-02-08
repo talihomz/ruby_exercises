@@ -51,10 +51,10 @@ module Enumerable
     count
   end
 
-  def my_map
+  def my_map(&map_block)
     mapped = []
     self.my_each do |item|
-      mapped << yield(item)
+      mapped << map_block.call(item)
     end
 
     mapped
@@ -71,8 +71,11 @@ module Enumerable
     current
   end
 
-  def multiply_els
-    self.my_inject { |a, b| a * b }
-  end
-
 end
+
+def multiply_els(array)
+  result = array.my_inject { |a, b| a * b }
+  return result
+end
+
+p multiply_els([1,2,3,4,5,6,7])
