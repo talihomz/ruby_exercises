@@ -51,10 +51,11 @@ module Enumerable
     count
   end
 
-  def my_map(&map_block)
+  def my_map(&map_proc)
     mapped = []
     self.my_each do |item|
-      mapped << map_block.call(item)
+      mapped << yield(item) if !map_proc
+      mapped << map_proc.call(item)
     end
 
     mapped
