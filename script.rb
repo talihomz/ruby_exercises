@@ -71,4 +71,8 @@ module Enumerable
     current
   end
 
+  def multiply_els
+    self.my_inject { |a, b| a * b }
+  end
+
 end
