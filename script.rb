@@ -60,4 +60,15 @@ module Enumerable
     mapped
   end
 
+  def my_inject(initial = self[0])
+    current = initial
+
+    self.my_each do |item|
+      next if initial == item
+      current = yield(current, item)
+    end
+
+    current
+  end
+
 end
