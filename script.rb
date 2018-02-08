@@ -26,4 +26,12 @@ module Enumerable
     results
   end
 
+  def my_all?
+    self.my_each do |item|
+      return false if !yield(item)
+    end
+
+    true
+  end
+
 end
