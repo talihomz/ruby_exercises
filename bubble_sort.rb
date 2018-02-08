@@ -1,24 +1,6 @@
-
 def bubble_sort(array)
-
-  stop = false
-
-  until stop do
-    stop = true
-    for a in (0...array.length - 1)
-      left = array[a]
-      right = array[a + 1]
-
-      if( left > right )
-        array[a], array[a + 1] = array[a + 1], array[a]
-        stop = false
-      end
-    end
-  end
-
-  return array
+  bubble_sort_by(array) { |a, b| a <=> b }
 end
-
 
 def bubble_sort_by(array)
   stop = false
@@ -38,4 +20,6 @@ def bubble_sort_by(array)
   return array
 end
 
-p bubble_sort_by(["one", "three", "seventy", "a", "aaaaaaaaaaaaaaaaaa"]) { |a, b| b.length <=> a.length }
+p bubble_sort([4,3,78,2,0,2])
+
+p bubble_sort_by(["hi","hello","hey"]) { |a, b| a.length <=> b.length }
