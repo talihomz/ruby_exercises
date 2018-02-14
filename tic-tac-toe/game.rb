@@ -1,10 +1,17 @@
 require './menu.rb'
+require './board.rb'
+require 'pp'
 
 class Game
 
-  # initialize this
-  @players = Hash.new
   Player = Struct.new(:name, :marker)
+
+  # initialize this
+  def initialize
+    @players = Hash.new
+    @players_set = false
+    @board = Board.new
+  end
 
   # start the game
   def start
@@ -14,23 +21,35 @@ class Game
     until game_over?
       input = gets.chomp
 
-      case input
-        when '1'
-          # instantiate players
-          puts 'Player X, please choose your name: '
-          px_name = gets.chomp
-          puts 'Player O, please choose your name: '
-          po_name = gets.chomp
-          px = Player.new(px_name, 'X')
-          po = Player.new(po_name, 'O')
-          # add players to the game
-          add_player(px)
-          add_player(po)
-        when '2'
+      if(input == '1' && !@players_set)
+        # add player 1
+        print 'Player X, please choose your name: '
+        px_name = gets.chomp
+        px = Player.new(px_name, 'X')
+        add_player(px)
+
+        # add player 2
+        print 'Player O, please choose your name: '
+        po_name = gets.chomp
+        po = Player.new(po_name, 'O')
+        add_player(po)
+
+        @players_set = true
+
+        puts "\n#{px.name} vs #{po.name}\n\n"
+        @board.display
+      elsif(input == '2')
+        puts "Are you sure you want to quit? (y/n)"
+        response = gets.chomp
+
+        if response.downcase == 'y'
           @quit = true
           stop
-        else
-          puts "Input '#{input}' is invalid!"
+        end
+      else
+
+        #now we play
+        puts "Input '#{input}' is invalid!"
       end
     end
 
@@ -49,8 +68,6 @@ class Game
   end
 
   def add_player(player)
-    p player
-    p @players
     @players[player.marker.to_sym] = player
   end
 
