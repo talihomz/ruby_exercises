@@ -4,6 +4,7 @@ Objects:
 - Slots (:value, :identifier)
 - Player (:name, :marker)
 - Game (:initialize, :start, :stop, :game_over?, :won?, @turn, :prompt)
+- Menu (:introduction)
 
 Steps:
 1. Add 2 players to the Game

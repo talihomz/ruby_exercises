@@ -1,24 +1,39 @@
+require './menu.rb'
+
 class Game
+
+  # initialize this
+  @players = Hash.new
+  Player = Struct.new(:name, :marker)
 
   # start the game
   def start
-    show_introduction
-    self.prompt
-  end
+    Menu.show_welcome
 
-  def show_introduction
-    puts %{
-===========================================
-      TIC TAC TOE : By Sava & Kevin
-===========================================
+    # game loop
+    until game_over?
+      input = gets.chomp
 
-Welcome to Tic Tac Toe. Play if you dare 😈
+      case input
+        when '1'
+          # instantiate players
+          puts 'Player X, please choose your name: '
+          px_name = gets.chomp
+          puts 'Player O, please choose your name: '
+          po_name = gets.chomp
+          px = Player.new(px_name, 'X')
+          po = Player.new(po_name, 'O')
+          # add players to the game
+          add_player(px)
+          add_player(po)
+        when '2'
+          @quit = true
+          stop
+        else
+          puts "Input '#{input}' is invalid!"
+      end
+    end
 
-1. Start game
-2. Quit
-
-Choose your destiny..
-    }
   end
 
   def stop
@@ -29,23 +44,17 @@ Choose your destiny..
     @quit
   end
 
-  # prompt
-  def prompt
-    until game_over?
-      input = gets.chomp
+  def prompt_user
+    input = gets.chomp
+  end
 
-      case input
-        when 'q' then
-          @quit = true
-          self.stop
-        else
-          puts "Input '#{input}' is invalid!"
-      end
-
-    end
+  def add_player(player)
+    p player
+    p @players
+    @players[player.marker.to_sym] = player
   end
 
   # defining scope
-  public :prompt, :start
-  private :game_over?, :stop, :show_introduction
+  public :start
+  private :game_over?, :stop
 end
