@@ -6,8 +6,8 @@ Objects:
 - Game (:initialize, :start, :stop, :game_over?, :won?, @turn, :prompt)
 
 Steps:
-1. Create a Board
-2. Add 2 players to the Board
+1. Add 2 players to the Game
+2. Create a Board
 3. Create all Slots
 4. Start game loop (asking player for input)
 - what are the inputs for a player?
