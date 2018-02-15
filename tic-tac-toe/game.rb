@@ -4,6 +4,8 @@ require 'pp'
 
 class Game
 
+  attr_reader :players
+
   Player = Struct.new(:name, :marker)
 
   # initialize this
@@ -22,22 +24,19 @@ class Game
       input = gets.chomp
 
       if(input == '1' && !@players_set)
-        # add player 1
-        print 'Player X, please choose your name: '
-        px_name = gets.chomp
-        px = Player.new(px_name, 'X')
-        add_player(px)
 
-        # add player 2
-        print 'Player O, please choose your name: '
-        po_name = gets.chomp
-        po = Player.new(po_name, 'O')
-        add_player(po)
+        # add players
+        add_player('X')
+        add_player('O')
 
-        @players_set = true
+        Menu.show_game(self)
 
-        puts "\n#{px.name} vs #{po.name}\n\n"
         @board.display
+        @players_set = true
+        @current_player = 'O'
+
+        play_game
+
       elsif(input == '2')
         puts "Are you sure you want to quit? (y/n)"
         response = gets.chomp
@@ -67,8 +66,41 @@ class Game
     input = gets.chomp
   end
 
-  def add_player(player)
+  def add_player(symbol)
+    print "Player #{symbol}, please choose your name: "
+    player_name = gets.chomp
+    player = Player.new(player_name, symbol)
     @players[player.marker.to_sym] = player
+  end
+
+  def play_game
+
+    stop_game = false
+
+    until stop_game
+      # 1. Prompt player for Input
+      print "#{@players[@current_player.to_sym].name}'s turn: "
+      player_input = gets.chomp
+
+      if(player_input == '2')
+        puts "Are you sure you want to quit? (y/n)"
+        response = gets.chomp
+
+        if response.downcase == 'y'
+          stop_game = true
+          @players_set = false
+          Menu.show_welcome
+        end
+      else
+        # 2. Show on screen
+        puts "You played on slot #{player_input}"
+
+        # 3. Switch current player
+        @current_player = @current_player == 'O' ? 'X' : 'O'
+      end
+
+    end
+
   end
 
   # defining scope
