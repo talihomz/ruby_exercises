@@ -77,14 +77,17 @@ class Game
   def exit_game
     @stop_game = true
     @players_set = false
+    @board.reset
     Menu.show_welcome
   end
 
   def play_game
 
     @turn = 0
+    @stop_game = false
 
     until @stop_game
+
       # 1. Prompt player for Input
       print "#{@players[@current_player.to_sym].name}'s turn: "
       player_input = gets.chomp
@@ -99,19 +102,30 @@ class Game
         # handle invalid input
         puts 'Hey, this is not chess!! Please enter a valid slot'
       else
-        # display the board
-        @board.display
 
-        # increase turn count
-        @turn += 1
+        if(@board.play_slot(player_input, @current_player))
 
-        # check if we should exit the game
-        @stop_game = true if @turn == 9
+          # display the board
+          @board.display
 
-        # switch current player
-        @current_player = @current_player == 'O' ? 'X' : 'O'
+          # increase turn count
+          @turn += 1
+
+          # check for winning state
+          if(@board.check_win)
+            puts "#{@players[@current_player.to_sym].name} has won the game!"
+            @stop_game = true
+          else
+            # check if we should exit the game
+            @stop_game = true if @turn == 9
+
+            # switch current player
+            @current_player = @current_player == 'O' ? 'X' : 'O'
+          end
+        else
+          puts "That slot is already occupied! Try another slot"
+        end
       end
-
     end
 
     exit_game
