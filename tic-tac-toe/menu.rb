@@ -12,11 +12,10 @@ Welcome to Tic Tac Toe. Play if you dare 😈
    content = %{
      1. Start game
      2. Quit
-
-     Choose your destiny..
    }
 
     puts "#{@@menu_header}#{content}"
+    print 'Choose your destiny... '
   end
 
   def self.show_game(game)

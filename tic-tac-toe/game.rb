@@ -12,10 +12,11 @@ class Game
   def initialize
     @players = Hash.new
     @players_set = false
+    @stop_game = false
     @board = Board.new
   end
 
-  # start the game
+  # enter the game menu
   def start
     Menu.show_welcome
 
@@ -23,6 +24,7 @@ class Game
     until game_over?
       input = gets.chomp
 
+      # player can only start the game if no players are set
       if(input == '1' && !@players_set)
 
         # add players
@@ -33,8 +35,9 @@ class Game
 
         @board.display
         @players_set = true
+        # player 0 always starts first
         @current_player = 'O'
-
+        # start the new round of tic-tac-toe
         play_game
 
       elsif(input == '2')
@@ -46,8 +49,6 @@ class Game
           stop
         end
       else
-
-        #now we play
         puts "Input '#{input}' is invalid!"
       end
     end
@@ -73,34 +74,47 @@ class Game
     @players[player.marker.to_sym] = player
   end
 
+  def exit_game
+    @stop_game = true
+    @players_set = false
+    Menu.show_welcome
+  end
+
   def play_game
 
-    stop_game = false
+    @turn = 0
 
-    until stop_game
+    until @stop_game
       # 1. Prompt player for Input
       print "#{@players[@current_player.to_sym].name}'s turn: "
       player_input = gets.chomp
 
       if(player_input == '2')
+
         puts "Are you sure you want to quit? (y/n)"
         response = gets.chomp
+        @stop_game = true if response.downcase == 'y'
 
-        if response.downcase == 'y'
-          stop_game = true
-          @players_set = false
-          Menu.show_welcome
-        end
+      elsif player_input.downcase.match(/^([abc]{1})([123]{1})$/) == nil
+        # handle invalid input
+        puts 'Hey, this is not chess!! Please enter a valid slot'
       else
-        # 2. Show on screen
-        puts "You played on slot #{player_input}"
+        # display the board
+        @board.display
 
-        # 3. Switch current player
+        # increase turn count
+        @turn += 1
+
+        # check if we should exit the game
+        @stop_game = true if @turn == 9
+
+        # switch current player
         @current_player = @current_player == 'O' ? 'X' : 'O'
       end
 
     end
 
+    exit_game
   end
 
   # defining scope
